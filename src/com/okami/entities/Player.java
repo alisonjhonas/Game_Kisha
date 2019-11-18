@@ -8,25 +8,27 @@ import java.util.List;
 import com.okami.graficos.Spritesheet;
 
 public class Player extends Entity{
+	// Constantes que definem a direção do personagem
 	public int LEFT = 1, RIGHT = 2;
+
 	public boolean right, left, up, down;
+	//Variável que indica a direção do personagem
 	public int direction = RIGHT;
+	//Indica que se o personagem está em movimento
 	public boolean moved;
 	// Controle para na contagem de frames para exibição da animação.
 	public int frame=0, maxFrame=4;
 	// Controle do index da animação.
-	public int index=0, maxIndex=7;
-	public int indexStoped=0, maxIndexStoped=10;
+	public int indexRunning=0, maxIndexRunning=7;
+	public int indexIdle=0, maxIndexIdle=10;
 	List<BufferedImage> spritesIdle;
-	List<BufferedImage> spritesLeft;
-	List<BufferedImage> spritesRight;
+	List<BufferedImage> spritesRun;
 	
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		speed = 1.4;
 		moved = false;
 		initSpriteIdle();
-		initSpriteLeft();
 		initSpriteRight();
 	}
 	
@@ -54,9 +56,9 @@ public class Player extends Entity{
 			frame++;
 			if(frame == maxFrame) {
 				frame = 0;
-				index++;
-				if(index > maxIndex) {
-					index = 0;
+				indexRunning++;
+				if(indexRunning > maxIndexRunning) {
+					indexRunning = 0;
 				}
 				
 			}
@@ -64,9 +66,9 @@ public class Player extends Entity{
 			frame++;
 			if(frame == maxFrame) {
 				frame = 0;
-				indexStoped++;
-				if(indexStoped > maxIndexStoped) {
-					indexStoped = 0;
+				indexIdle++;
+				if(indexIdle > maxIndexIdle) {
+					indexIdle = 0;
 				}
 			}
 		}
@@ -76,15 +78,15 @@ public class Player extends Entity{
 	public void render(Graphics graphics) {
 		if(moved) {
 			if(direction == RIGHT) {
-				graphics.drawImage(spritesRight.get(index), getX(), getY(), null);
+				graphics.drawImage(spritesRun.get(indexRunning), getX(), getY(), null);
 			}else if(direction == LEFT) {
-				graphics.drawImage(spritesLeft.get(index), getX(), getY(), null);
+				graphics.drawImage(spritesRun.get(indexRunning), getX() + width, getY(), -width, height, null);
 			}
 		}else {
 			if(direction == RIGHT) {
-				graphics.drawImage(spritesIdle.get(indexStoped), getX(), getY(), null);
+				graphics.drawImage(spritesIdle.get(indexIdle), getX(), getY(), null);
 			}else if(direction == LEFT) {
-				graphics.drawImage(spritesIdle.get(indexStoped), getX() + width, getY(), -width, height, null);
+				graphics.drawImage(spritesIdle.get(indexIdle), getX() + width, getY(), -width, height, null);
 			}
 		}
 	}
@@ -95,13 +97,8 @@ public class Player extends Entity{
 	}
 	
 	private void initSpriteRight() {
-		spritesRight = new ArrayList<BufferedImage>();
-		initSprite("/Run.png", 624, spritesRight);
-	}
-	
-	private void initSpriteLeft() {
-		spritesLeft = new ArrayList<BufferedImage>();
-		initSprite("/Run_Left.png", 624, spritesLeft);
+		spritesRun = new ArrayList<BufferedImage>();
+		initSprite("/Run.png", 624, spritesRun);
 	}
 	
 	private void initSprite(String path, int size, List<BufferedImage> sprites){

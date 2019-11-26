@@ -2,15 +2,11 @@ package com.okami.util;
 
 public class KeyBoardCommand extends Command{
 	
-	boolean pressed;
-	boolean released;
+	boolean pressed;	
 	int keyCode;
 	
 	public boolean isPressed() {
 		return pressed;
-	}
-	public boolean isReleased() {
-		return released;
 	}
 	public int getKeyCode() {
 		return keyCode;
@@ -24,11 +20,6 @@ public class KeyBoardCommand extends Command{
 		this.pressed = pressed;
 		return this;
 		
-	}
-	
-	public KeyBoardCommand released (boolean released) {
-		this.released = released;
-		return this;
 	}
 	
 	public KeyBoardCommand keyCode (int keyCode) {

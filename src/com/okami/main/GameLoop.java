@@ -128,36 +128,12 @@ public class GameLoop extends Canvas implements Runnable, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		
-//		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-//			player.right = true;
-//		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-//			player.left = true;			
-//		}
-//		
-//		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-//			player.up = true;
-//		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-//			player.down = true;
-//		}
-		
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(true).released(false));
+		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(true));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-//		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-//			player.right = false;
-//		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-//			player.left = false;			
-//		}
-//		
-//		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-//			player.up = false;
-//		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-//			player.down = false;
-//		}
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(false).released(true));
+		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(false));
 	}
 
 	@Override

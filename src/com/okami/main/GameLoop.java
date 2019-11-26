@@ -13,11 +13,12 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.okami.entities.Entity;
-import com.okami.entities.Player;
-import com.okami.graficos.Spritesheet;
+import com.okami.entities.Game;
+import com.okami.util.Command;
+import com.okami.util.KeyBoardCommand;
+import com.okami.util.Observer;
 
-public class Game extends Canvas implements Runnable, KeyListener {
+public class GameLoop extends Canvas implements Runnable, KeyListener {
 	
 	private static final long serialVersionUID = 1L;
 	public final double amountOfTicks = 60.0;
@@ -28,22 +29,22 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private final int WIDTH = 220;
     private final int HEIGHT = 240;
     private final int SCALE = 2;
+    private List<Observer> observers;
     
     private BufferedImage image;
-    public Spritesheet spritesheet;
-    public List<Entity> entities;
-    public static Player player;
-    public Game(){
+    
+    private Game game;
+    public GameLoop(){
         this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
         initFrame();
         addKeyListener(this);
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        spritesheet = new Spritesheet("/Idle.png");
-        entities = new ArrayList<Entity>();
-        player = new Player(0, 0, 78, 58, spritesheet.getSprite(0, 0, 78, 58));
-        entities.add(player);
+        game = Game.createGame();
+        observers = new ArrayList<>();
+        registerObserver((Command command) -> game.movePlayer((KeyBoardCommand)command));
+        
     }
-
+    
     public synchronized void start(){
         thread = new Thread(this);
         isRunning = true;
@@ -72,14 +73,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
     
     public static void main(String args[]) {
-        Game game = new Game();
+        GameLoop game = new GameLoop();
         game.start();
     }
 
     public void tick() {
-    	for (Entity entity : entities) {
-    		entity.tick();
-		}
+    	game.tick();
     }
 
     public void render() {
@@ -94,9 +93,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     	graphics.setColor(Color.GREEN);
     	graphics.fillRect(0, 0, WIDTH, HEIGHT);
     	
-    	for(Entity entity : entities) {
-    		entity.render(graphics);
-    	}
+    	game.render(graphics);
     	
     	graphics.dispose();
     	graphics = bs.getDrawGraphics();
@@ -132,32 +129,35 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-			player.right = true;
-		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-			player.left = true;			
-		}
+//		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
+//			player.right = true;
+//		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
+//			player.left = true;			
+//		}
+//		
+//		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+//			player.up = true;
+//		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+//			player.down = true;
+//		}
 		
-		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-			player.up = true;
-		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-			player.down = true;
-		}
+		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(true).released(false));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-			player.right = false;
-		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-			player.left = false;			
-		}
-		
-		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-			player.up = false;
-		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-			player.down = false;
-		}
+//		if(e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
+//			player.right = false;
+//		}else if(e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
+//			player.left = false;			
+//		}
+//		
+//		if(e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
+//			player.up = false;
+//		}else if(e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
+//			player.down = false;
+//		}
+		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(false).released(true));
 	}
 
 	@Override
@@ -165,5 +165,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	public void notifyObserver(KeyBoardCommand command) {
+		for (Observer observer : observers) {
+			observer.apply(command);
+		}
+	}
+	
+	public void registerObserver(Observer observer) {
+		this.observers.add(observer);
+	}
 }

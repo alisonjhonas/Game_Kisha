@@ -1,23 +1,23 @@
 # Game Kisha
-## Game scketch inspired by Zelda Classic Game.
+## Game Sketch Inspired by Zelda Classic Game.
 
 ### Settings
-* Java Language
-* Assets avaliable [itch](https://itch.io/game-assets)
+* Java 11
+* Assets [itch](https://itch.io/game-assets)
   * [Kings and Pigs](https://pixel-frog.itch.io/kings-and-pigs)
   * [Pixel_Poem Dungeon Asset](https://pixel-poem.itch.io/dungeon-assetpuck)
 
 ### Mechanics
 * Start Menu, Pause and Game Over
-* Player annimation System
-* KeyBoard input
+* KeyBoard Input
+* Player Animation System
 * Shooting System
 * Map Handle System
-* Dungeon Level Sysem
-* Enemies
-* Boss Battle
-* Colectables
-* PowerUp itens
+* Dungeon Level System
 * Damage System
 * Save and Load System
 * Audio System
+* Enemies
+* Boss Battle
+* Collectibles
+* PowerUp Itens

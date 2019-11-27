@@ -1,48 +1,25 @@
 package com.okami.main;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JFrame;
-
 import com.okami.entities.Game;
-import com.okami.util.Command;
-import com.okami.util.KeyBoardCommand;
-import com.okami.util.Observer;
+import com.okami.graficos.GameScreen;
+import com.okami.util.GameScreenStrategy;
+import com.okami.util.GameStrategy;
 
-public class GameLoop extends Canvas implements Runnable, KeyListener {
+public class GameLoop implements Runnable {
 	
-	private static final long serialVersionUID = 1L;
+	
 	public final double amountOfTicks = 60.0;
     public final double nanoSeconds = 1000000000 / amountOfTicks;
     public boolean isRunning = false;
     private Thread thread;
-    public static JFrame frame;
-    private final int WIDTH = 220;
-    private final int HEIGHT = 240;
-    private final int SCALE = 2;
-    private List<Observer> observers;
     
-    private BufferedImage image;
     
     private Game game;
+    private GameScreen gameScreen;
     public GameLoop(){
-        this.setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
-        initFrame();
-        addKeyListener(this);
-        image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        game = Game.createGame();
-        observers = new ArrayList<>();
-        registerObserver((Command command) -> game.movePlayer((KeyBoardCommand)command));
-        
+        game = GameStrategy.createGame();
+        gameScreen = GameScreenStrategy.createGameScreen();
+        gameScreen.setGame(game);
     }
     
     public synchronized void start(){
@@ -51,15 +28,6 @@ public class GameLoop extends Canvas implements Runnable, KeyListener {
         thread.start();
     }
     
-    public void initFrame() {
-    	frame = new JFrame();
-        frame.add(this);
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
     public synchronized void stop(){
     	
     	isRunning = false;
@@ -82,23 +50,7 @@ public class GameLoop extends Canvas implements Runnable, KeyListener {
     }
 
     public void render() {
-    	
-    	BufferStrategy bs = this.getBufferStrategy();
-    	if(bs == null) {
-    		this.createBufferStrategy(3);
-    		return;
-    	}
-    	
-    	Graphics graphics = image.getGraphics();
-    	graphics.setColor(Color.GREEN);
-    	graphics.fillRect(0, 0, WIDTH, HEIGHT);
-    	
-    	game.render(graphics);
-    	
-    	graphics.dispose();
-    	graphics = bs.getDrawGraphics();
-    	graphics.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
-    	bs.show();
+    	gameScreen.render();
     }
 
     @Override
@@ -125,30 +77,4 @@ public class GameLoop extends Canvas implements Runnable, KeyListener {
             }
         }
     }
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(true));
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(false));
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void notifyObserver(KeyBoardCommand command) {
-		for (Observer observer : observers) {
-			observer.apply(command);
-		}
-	}
-	
-	public void registerObserver(Observer observer) {
-		this.observers.add(observer);
-	}
 }

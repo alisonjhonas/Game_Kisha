@@ -3,7 +3,7 @@ package com.okami.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Entity {
+public class Entity implements GameObject {
 	
 	protected double x;
 	protected double y;
@@ -41,12 +41,16 @@ public class Entity {
 		return height;
 	}
 	
+	@Override
 	public void render(Graphics graphics) {
 		graphics.drawImage(sprite, this.getX(), this.getY(), null);
 	}
 
+	@Override
 	public void tick() {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

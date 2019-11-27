@@ -10,8 +10,9 @@ import java.util.Map;
 import com.okami.util.Command;
 import com.okami.util.KeyBoardCommand;
 import com.okami.util.Observer;
+import com.okami.util.PlayerStrategy;
 
-public class Game {
+public class Game implements GameObject{
 	
 	
 	List<Entity> entities;
@@ -20,14 +21,6 @@ public class Game {
 	public Game() {
 		entities = new ArrayList<Entity>();
 		movementePlayerActions = new HashMap<Integer, Observer>();
-	}
-	
-	public static Game createGame() {
-		Game game = new Game();
-		game.initMovementActionPlayer();
-		game.setPlayer(new Player(0, 0, 78, 58, null));
-		game.getEntities().add(game.getPlayer());
-		return game; 
 	}
 
 	public List<Entity> getEntities() {
@@ -45,17 +38,14 @@ public class Game {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+	@Override
 	public void render(Graphics graphics) {
-		for (Entity entity : entities) {
-			entity.render(graphics);
-		}
+		entities.forEach(entity -> entity.render(graphics));
 	}
 	
-	public void tick() {
-		for (Entity entity : entities) {
-			entity.tick();
-		}
+	@Override
+	public void tick() {		
+		entities.forEach(entity -> entity.tick());		
 	}
 	
 	public void initMovementActionPlayer() {

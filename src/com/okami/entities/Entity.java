@@ -3,6 +3,8 @@ package com.okami.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.okami.util.Command;
+
 public class Entity implements GameObject {
 	
 	protected double x;
@@ -48,6 +50,12 @@ public class Entity implements GameObject {
 
 	@Override
 	public void tick() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void execute(Command command) {
 		// TODO Auto-generated method stub
 		
 	}

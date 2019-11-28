@@ -1,7 +1,6 @@
 package com.okami.main;
 
-import com.okami.entities.Game;
-import com.okami.graficos.GameScreen;
+import com.okami.entities.GameObject;
 import com.okami.util.GameScreenStrategy;
 import com.okami.util.GameStrategy;
 
@@ -14,12 +13,11 @@ public class GameLoop implements Runnable {
     private Thread thread;
     
     
-    private Game game;
-    private GameScreen gameScreen;
+    private GameObject game;
+    private GameObject gameScreen;
     public GameLoop(){
         game = GameStrategy.createGame();
-        gameScreen = GameScreenStrategy.createGameScreen();
-        gameScreen.setGame(game);
+        gameScreen = GameScreenStrategy.createGameScreen(game);
     }
     
     public synchronized void start(){
@@ -50,7 +48,7 @@ public class GameLoop implements Runnable {
     }
 
     public void render() {
-    	gameScreen.render();
+    	gameScreen.render(null);
     }
 
     @Override

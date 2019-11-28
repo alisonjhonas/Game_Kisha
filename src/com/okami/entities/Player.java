@@ -10,12 +10,12 @@ import com.okami.graficos.Spritesheet;
 public class Player extends Entity{
 	// Constantes que definem a direção do personagem
 	public int LEFT = 1, RIGHT = 2;
-
+	
 	public boolean right, left, up, down;
 	//Variável que indica a direção do personagem
-	public int direction = RIGHT;
+	public int directionMovement = RIGHT;
 	//Indica que se o personagem está em movimento
-	public boolean moved;
+	public boolean isPlayerMoving;
 	// Controle para na contagem de frames para exibição da animação.
 	public int frame=0, maxFrame=4;
 	// Controle do index da animação.
@@ -27,32 +27,32 @@ public class Player extends Entity{
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		speed = 1.4;
-		moved = false;
+		isPlayerMoving = false;
 		initSpriteIdle();
 		initSpriteRight();
 	}
 	
 	@Override
 	public void tick(){
-		moved = false;
+		isPlayerMoving = false;
 		if(right) {
 			x+=speed;
-			moved = true;
-			direction = RIGHT;
+			isPlayerMoving = true;
+			directionMovement = RIGHT;
 		}else if(left) {
 			x-=speed;
-			moved = true;
-			direction = LEFT;
+			isPlayerMoving = true;
+			directionMovement = LEFT;
 		}
 		
 		if(up) {
 			y-=speed;
-			moved = true;
+			isPlayerMoving = true;
 		}else if(down) {
 			y+=speed;
-			moved = true;
+			isPlayerMoving = true;
 		}
-		if(moved) {
+		if(isPlayerMoving) {
 			frame++;
 			if(frame == maxFrame) {
 				frame = 0;
@@ -76,16 +76,16 @@ public class Player extends Entity{
 	
 	@Override
 	public void render(Graphics graphics) {
-		if(moved) {
-			if(direction == RIGHT) {
+		if(isPlayerMoving) {
+			if(directionMovement == RIGHT) {
 				graphics.drawImage(spritesRun.get(indexRunning), getX(), getY(), null);
-			}else if(direction == LEFT) {
+			}else if(directionMovement == LEFT) {
 				graphics.drawImage(spritesRun.get(indexRunning), getX() + width, getY(), -width, height, null);
 			}
 		}else {
-			if(direction == RIGHT) {
+			if(directionMovement == RIGHT) {
 				graphics.drawImage(spritesIdle.get(indexIdle), getX(), getY(), null);
-			}else if(direction == LEFT) {
+			}else if(directionMovement == LEFT) {
 				graphics.drawImage(spritesIdle.get(indexIdle), getX() + width, getY(), -width, height, null);
 			}
 		}

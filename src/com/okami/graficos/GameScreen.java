@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import com.okami.entities.Game;
 import com.okami.entities.GameObject;
 import com.okami.util.Command;
 import com.okami.util.KeyBoardCommand;
@@ -21,12 +20,12 @@ import com.okami.util.Observer;
 
 public class GameScreen extends Canvas implements GameObject, KeyListener {
 	private static final long serialVersionUID = 1L;
-	public static JFrame frame;
-    private final int WIDTH = 220;
-    private final int HEIGHT = 240;
+	public  JFrame frame;
+    public static final int WIDTH = 360;
+    public static final int HEIGHT = 480;
     private final int SCALE = 2;
     private BufferedImage image;
-    private Game game;
+    private GameObject game;
     private List<Observer> observers;
 	
     public GameScreen() {
@@ -35,43 +34,43 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
     	initFrame();
     	image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     	observers = new ArrayList<>();
-        registerObserver((Command command) -> game.movePlayer((KeyBoardCommand)command));
+        registerObserver((Command command) -> game.execute(command));
     }
     
-    public void render() {
-    	BufferStrategy bs = this.getBufferStrategy();
-    	if(bs == null) {
+	@Override
+	public void render(Graphics graphics) {
+		BufferStrategy bufferStrategy = this.getBufferStrategy();
+    	if(bufferStrategy == null) {
     		this.createBufferStrategy(3);
     		return;
     	}
     	
-    	Graphics graphics = image.getGraphics();
+    	graphics = image.getGraphics();
+    	clearScreen(graphics);
+    	game.render(graphics);
+    	drawGraphics(graphics, bufferStrategy);
+    	
+	}
+	
+	public void clearScreen(Graphics graphics) {
     	graphics.setColor(Color.GREEN);
     	graphics.fillRect(0, 0, WIDTH, HEIGHT);
-    	
-    	render(graphics);
-    	
-    	graphics.dispose();
-    	graphics = bs.getDrawGraphics();
-    	graphics.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
-    	bs.show();
-    }
-    
-	@Override
-	public void render(Graphics graphics) {		
-    	game.render(graphics);	
 	}
-
+	
+	public void drawGraphics(Graphics graphics, BufferStrategy bufferStrategy){
+		graphics.dispose();
+    	graphics = bufferStrategy.getDrawGraphics();
+    	graphics.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
+    	bufferStrategy.show();
+	}
+	
 	@Override
 	public void tick() {
 		
 	}
 	
-	public Game getGame() {
-		return game;
-	}
 	
-	public void setGame(Game game) {
+	public void setGame(GameObject game) {
 		this.game = game;
 	}
 	
@@ -110,5 +109,11 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
+
+	@Override
+	public void execute(Command command) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

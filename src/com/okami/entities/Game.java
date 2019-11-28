@@ -10,7 +10,6 @@ import java.util.Map;
 import com.okami.util.Command;
 import com.okami.util.KeyBoardCommand;
 import com.okami.util.Observer;
-import com.okami.util.PlayerStrategy;
 
 public class Game implements GameObject{
 	
@@ -71,6 +70,14 @@ public class Game implements GameObject{
 		if(movementePlayerActions.containsKey(command.getKeyCode())) {
 			movementePlayerActions.get(command.getKeyCode()).apply(command);
 		}
+	}
+
+	@Override
+	public void execute(Command command) {
+		if(command instanceof KeyBoardCommand) {
+			movePlayer((KeyBoardCommand)command);
+		}
+		
 	}
 	
 }

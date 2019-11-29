@@ -1,6 +1,7 @@
 package com.okami.main;
 
 import com.okami.entities.GameObject;
+import com.okami.graficos.GameScreen;
 import com.okami.util.GameScreenStrategy;
 import com.okami.util.GameStrategy;
 
@@ -14,7 +15,7 @@ public class GameLoop implements Runnable {
     
     
     private GameObject game;
-    private GameObject gameScreen;
+    private GameScreen gameScreen;
     public GameLoop(){
         game = GameStrategy.createGame();
         gameScreen = GameScreenStrategy.createGameScreen(game);
@@ -48,7 +49,7 @@ public class GameLoop implements Runnable {
     }
 
     public void render() {
-    	gameScreen.render(null);
+    	gameScreen.render();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class GameLoop implements Runnable {
                 delta--;
             }
             if(System.currentTimeMillis() - timer >= 1000){
-                System.out.println("FPS: "+ frames);
+//                System.out.println("FPS: "+ frames);
                 frames = 0;
                 timer+=1000;
             }

@@ -1,5 +1,5 @@
 package com.okami.util;
 
-public abstract class Command {
-	
+public interface Command {
+	public abstract void execute();
 }

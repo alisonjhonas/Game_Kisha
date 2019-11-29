@@ -1,25 +1,29 @@
 package com.okami.entities;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.okami.util.Command;
-import com.okami.util.KeyBoardCommand;
+import com.okami.graficos.Camera;
+import com.okami.graficos.GameScreen;
+import com.okami.util.Action;
+import com.okami.util.KeyBoardAction;
 import com.okami.util.Observer;
+import com.okami.util.PlayerStrategy;
 
-public class Game implements GameObject{
+public class Game extends GameObject implements Observer{
 	
 	
 	List<Entity> entities;
-	Player player;
-	Map<Integer, Observer> movementePlayerActions;
+	static Player player;
+	static Camera camera;
+	World world;
 	public Game() {
 		entities = new ArrayList<Entity>();
-		movementePlayerActions = new HashMap<Integer, Observer>();
+		player = PlayerStrategy.createPlayer();
+		entities.add(player);
+		camera = new Camera();
+		world = new World("/map.png");
 	}
 
 	public List<Entity> getEntities() {
@@ -39,45 +43,39 @@ public class Game implements GameObject{
 	}
 	@Override
 	public void render(Graphics graphics) {
+		world.render(graphics);
 		entities.forEach(entity -> entity.render(graphics));
 	}
 	
 	@Override
 	public void tick() {		
-		entities.forEach(entity -> entity.tick());		
+		entities.forEach(entity -> entity.tick());
+		moveCamera();
 	}
 	
-	public void initMovementActionPlayer() {
-		Observer movePlayerRight = (Command command) -> {player.right = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerLeft = (Command command) -> {player.left = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerUp = (Command command) -> {player.up = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerDown = (Command command) -> {player.down = ((KeyBoardCommand)command).isPressed();};
-		
-		movementePlayerActions.put(KeyEvent.VK_RIGHT, movePlayerRight);
-		movementePlayerActions.put(KeyEvent.VK_D, movePlayerRight);
-		
-		movementePlayerActions.put(KeyEvent.VK_LEFT, movePlayerLeft);
-		movementePlayerActions.put(KeyEvent.VK_A, movePlayerLeft);
-		
-		movementePlayerActions.put(KeyEvent.VK_UP, movePlayerUp);
-		movementePlayerActions.put(KeyEvent.VK_W, movePlayerUp);
-		
-		movementePlayerActions.put(KeyEvent.VK_DOWN, movePlayerDown);
-		movementePlayerActions.put(KeyEvent.VK_S, movePlayerDown);
+	public void moveCamera() {
+		double newCoordinateX = Math.min(Math.max(player.coordinateX - GameScreen.WIDTH/2, 0), GameScreen.WIDTH-80);
+		double newCoordinateY = Math.max(Math.min(player.coordinateY - GameScreen.HEIGHT/2, GameScreen.HEIGHT+160), 0);
+		camera.setCoordinateX(newCoordinateX);
+		camera.setCoordinateY(newCoordinateY);
 	}
 	
-	public void movePlayer(KeyBoardCommand command) {
-		if(movementePlayerActions.containsKey(command.getKeyCode())) {
-			movementePlayerActions.get(command.getKeyCode()).apply(command);
+	public void movePlayer(KeyBoardAction command) {
+		if(player.getMovementePlayerActions().containsKey(command.getKeyCode())) {
+			player.getMovementePlayerActions().get(command.getKeyCode()).apply(command);
 		}
 	}
 
 	@Override
-	public void execute(Command command) {
-		if(command instanceof KeyBoardCommand) {
-			movePlayer((KeyBoardCommand)command);
-		}
+	public void execute() {
 		
+	}
+
+	@Override
+	public void apply(Action action) {
+		if(action instanceof KeyBoardAction) {
+			movePlayer((KeyBoardAction)action);
+		}
 	}
 	
 }

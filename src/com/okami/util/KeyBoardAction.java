@@ -1,6 +1,6 @@
 package com.okami.util;
 
-public class KeyBoardCommand extends Command{
+public class KeyBoardAction extends Action{
 	
 	boolean pressed;	
 	int keyCode;
@@ -12,17 +12,17 @@ public class KeyBoardCommand extends Command{
 		return keyCode;
 	}
 	
-	public static KeyBoardCommand createCommand() {
-		return new KeyBoardCommand();
+	public static KeyBoardAction createCommand() {
+		return new KeyBoardAction();
 	}
 	
-	public KeyBoardCommand pressed (boolean pressed) {
+	public KeyBoardAction pressed (boolean pressed) {
 		this.pressed = pressed;
 		return this;
 		
 	}
 	
-	public KeyBoardCommand keyCode (int keyCode) {
+	public KeyBoardAction keyCode (int keyCode) {
 		this.keyCode = keyCode;
 		return this;
 	}

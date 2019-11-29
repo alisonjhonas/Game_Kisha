@@ -4,10 +4,15 @@ import java.awt.Graphics;
 
 import com.okami.util.Command;
 
-public interface GameObject {
-	public void render(Graphics graphics);
+public abstract class GameObject implements Command {
+	public abstract void render(Graphics graphics);
 
-	public void tick();
+	public abstract void tick();
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 	
-	public void execute(Command command);
 }

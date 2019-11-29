@@ -38,9 +38,6 @@ public class Game extends GameObject implements Observer{
 		return player;
 	}
 
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
 	@Override
 	public void render(Graphics graphics) {
 		world.render(graphics);
@@ -54,8 +51,8 @@ public class Game extends GameObject implements Observer{
 	}
 	
 	public void moveCamera() {
-		double newCoordinateX = Math.min(Math.max(player.coordinateX - GameScreen.WIDTH/2, 0), GameScreen.WIDTH-80);
-		double newCoordinateY = Math.max(Math.min(player.coordinateY - GameScreen.HEIGHT/2, GameScreen.HEIGHT+160), 0);
+		double newCoordinateX = Math.min(Math.max(player.coordinateX - GameScreen.WIDTH/2, 0), world.getWidth()- GameScreen.WIDTH);
+		double newCoordinateY = Math.max(Math.min(player.coordinateY - GameScreen.HEIGHT/2, world.getHeight() - GameScreen.HEIGHT), 0);
 		camera.setCoordinateX(newCoordinateX);
 		camera.setCoordinateY(newCoordinateY);
 	}

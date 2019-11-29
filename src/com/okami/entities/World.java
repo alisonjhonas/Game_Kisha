@@ -22,9 +22,13 @@ public class World extends GameObject {
 	
 	Map<Integer, Command> commands;
 	List<Tile> tiles;
+	Game game;
+	int width, height;
 	public World(String path) {
 		try {
 			BufferedImage map = ImageIO.read(getClass().getResource(path));
+			width = map.getWidth();
+			height = map.getHeight();
 			int[] pixelsMap = new int[map.getWidth()*map.getHeight()];
 			map.getRGB(0, 0, map.getWidth(), map.getHeight(), pixelsMap, 0, map.getWidth());
 			tiles = new ArrayList<Tile>();
@@ -32,14 +36,17 @@ public class World extends GameObject {
 				for(int yy = 0; yy < map.getHeight(); yy++) {
 					
 					int pixelAtual = pixelsMap[xx + (yy*map.getWidth())];
+					
 					if(pixelAtual == FLOOR) {
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new FloorTile(xx*Tile.TILE_DIMENSION, yy*Tile.TILE_DIMENSION));
 					}else if(pixelAtual == WALL) {
-						tiles.add(new WallTile(xx*32, yy*32));
+						tiles.add(new WallTile(xx*Tile.TILE_DIMENSION, yy*Tile.TILE_DIMENSION));
 					}else if(pixelAtual == PLAYER){
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new FloorTile(xx*Tile.TILE_DIMENSION, yy*Tile.TILE_DIMENSION));
+					}else if(pixelAtual == ENEMY){
+						
 					}else {
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new FloorTile(xx*Tile.TILE_DIMENSION, yy*Tile.TILE_DIMENSION));
 					}
 					
 				}
@@ -62,4 +69,12 @@ public class World extends GameObject {
 		
 	}
 
+	public int getWidth() {
+		return width*Tile.TILE_DIMENSION;
+	}
+
+	public int getHeight() {
+		return height*Tile.TILE_DIMENSION;
+	}
+	
 }

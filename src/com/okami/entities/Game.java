@@ -23,7 +23,7 @@ public class Game extends GameObject implements Observer{
 		player = PlayerStrategy.createPlayer();
 		entities.add(player);
 		camera = new Camera();
-		world = new World("/map.png");
+		world = new World("/map-2.png");
 	}
 
 	public List<Entity> getEntities() {

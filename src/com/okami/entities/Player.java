@@ -13,8 +13,8 @@ import com.okami.util.Observer;
 
 public class Player extends AnimatedEntity{
 	
-	private static Spritesheet spriteSheetIdle = new Spritesheet("/Idle.png");
-	private static Spritesheet spriteSheetRun = new Spritesheet("/Run.png");
+	private static Spritesheet spriteSheetIdle = new Spritesheet("/IdleShadow2.png");
+	private static Spritesheet spriteSheetRun = new Spritesheet("/RunShadow.png");
 	
 	// Constantes que definem a direção do personagem
 	public int LEFT = 1, RIGHT = 2;

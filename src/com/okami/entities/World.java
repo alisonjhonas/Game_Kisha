@@ -22,19 +22,24 @@ public class World extends GameObject {
 	
 	Map<Integer, Command> commands;
 	List<Tile> tiles;
+	Game game;
+	int width, height;
 	public World(String path) {
 		try {
 			BufferedImage map = ImageIO.read(getClass().getResource(path));
+			width = map.getWidth();
+			height = map.getHeight();
 			int[] pixelsMap = new int[map.getWidth()*map.getHeight()];
 			map.getRGB(0, 0, map.getWidth(), map.getHeight(), pixelsMap, 0, map.getWidth());
 			tiles = new ArrayList<Tile>();
 			for(int xx = 0; xx < map.getWidth(); xx++) {
 				for(int yy = 0; yy < map.getHeight(); yy++) {
 					
-					int xxPixel = xx*32;
-					int yyPixel = yy*32;
+					int xxPixel = xx*Tile.TILE_DIMENSION;
+					int yyPixel = yy*Tile.TILE_DIMENSION;
 					
 					int pixelAtual = pixelsMap[xx + (yy*map.getWidth())];
+					
 					if(pixelAtual == FLOOR) {
 						tiles.add(new FloorTile(xxPixel, yyPixel));
 					}else if(pixelAtual == WALL) {
@@ -72,4 +77,12 @@ public class World extends GameObject {
 		
 	}
 
+	public int getWidth() {
+		return width*Tile.TILE_DIMENSION;
+	}
+
+	public int getHeight() {
+		return height*Tile.TILE_DIMENSION;
+	}
+	
 }

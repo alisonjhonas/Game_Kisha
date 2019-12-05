@@ -6,9 +6,14 @@ import java.awt.image.BufferedImage;
 import com.okami.graficos.Spritesheet;
 
 public class Tile extends GameObject {
+	protected static int TILE_DIMENSION = 32;
 	private static Spritesheet spritesheet = new Spritesheet("/Terrain.png");
-	protected static BufferedImage FLOOR_TILE = spritesheet.getSprite(160, 352, 32, 32);
-	protected static BufferedImage WALL_TILE = spritesheet.getSprite(160, 160, 32, 32);
+	protected static BufferedImage FLOOR_TILE = spritesheet.getSprite(160, 352, TILE_DIMENSION, TILE_DIMENSION);
+	protected static BufferedImage WALL_TILE = spritesheet.getSprite(160, 160, TILE_DIMENSION, TILE_DIMENSION);
+//	private static Spritesheet spritesheet = new Spritesheet("/Mega.png");
+//	protected static BufferedImage FLOOR_TILE = spritesheet.getSprite(256, 832, TILE_DIMENSION, TILE_DIMENSION);
+//	protected static BufferedImage WALL_TILE = spritesheet.getSprite(128, 32, TILE_DIMENSION, TILE_DIMENSION);
+	
 	private int x, y;
 	BufferedImage sprite;
 	public Tile(int x, int y, BufferedImage sprite) {

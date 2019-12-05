@@ -6,7 +6,7 @@ import com.okami.graficos.Spritesheet;
 
 public class BigHeart extends AnimatedEntity {
 	
-	private static Spritesheet spriteSheetIdle = new Spritesheet("/BigHeartIdle.png");
+	private static Spritesheet spriteSheetIdle = new Spritesheet("/BigHeartIdleShadow.png");
 	
 	public BigHeart(int x, int y) {
 		super(x, y, 18, 14);

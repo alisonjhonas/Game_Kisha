@@ -4,7 +4,7 @@ import com.okami.graficos.Spritesheet;
 
 public class PigEnemy extends Enemy {
 	
-	private static Spritesheet spriteSheetIdle = new Spritesheet("/PigIdle.png");
+	private static Spritesheet spriteSheetIdle = new Spritesheet("/PigIdleShadow.png");
 	
 	public PigEnemy(int x, int y) {
 		super(x, y, 34, 28);

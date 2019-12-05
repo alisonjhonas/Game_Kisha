@@ -14,7 +14,7 @@ import com.okami.util.PlayerStrategy;
 public class Game extends GameObject implements Observer{
 	
 	
-	List<Entity> entities;
+	static List<Entity> entities;
 	static Player player;
 	static Camera camera;
 	World world;
@@ -41,6 +41,7 @@ public class Game extends GameObject implements Observer{
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
 	@Override
 	public void render(Graphics graphics) {
 		world.render(graphics);

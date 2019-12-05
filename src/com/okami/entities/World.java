@@ -31,15 +31,25 @@ public class World extends GameObject {
 			for(int xx = 0; xx < map.getWidth(); xx++) {
 				for(int yy = 0; yy < map.getHeight(); yy++) {
 					
+					int xxPixel = xx*32;
+					int yyPixel = yy*32;
+					
 					int pixelAtual = pixelsMap[xx + (yy*map.getWidth())];
 					if(pixelAtual == FLOOR) {
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new FloorTile(xxPixel, yyPixel));
 					}else if(pixelAtual == WALL) {
-						tiles.add(new WallTile(xx*32, yy*32));
-					}else if(pixelAtual == PLAYER){
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new WallTile(xxPixel, yyPixel));
+					}else if(pixelAtual == ENEMY){
+						tiles.add(new FloorTile(xxPixel, yyPixel));
+						Game.entities.add(new PigEnemy(xxPixel, yyPixel));
+					}else if(pixelAtual == LIFE){
+						tiles.add(new FloorTile(xxPixel, yyPixel));
+						Game.entities.add(new BigHeart(xxPixel, yyPixel));
+					}else if(pixelAtual == BULLET){
+						tiles.add(new FloorTile(xxPixel, yyPixel));
+						Game.entities.add(new CannonBall(xxPixel, yyPixel));
 					}else {
-						tiles.add(new FloorTile(xx*32, yy*32));
+						tiles.add(new FloorTile(xxPixel, yyPixel));
 					}
 					
 				}

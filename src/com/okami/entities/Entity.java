@@ -3,7 +3,7 @@ package com.okami.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-public class Entity extends GameObject {
+public abstract class Entity extends GameObject {
 	
 	protected double coordinateX;
 	protected double coordinateY;
@@ -11,6 +11,14 @@ public class Entity extends GameObject {
 	protected int height;
 	protected BufferedImage sprite;
 	protected double speed = 0.0;
+	
+	public Entity(int x, int y, int width, int height) {
+		super();
+		this.coordinateX = x;
+		this.coordinateY = y;
+		this.width = width;
+		this.height = height;
+	}
 	
 	public Entity(int x, int y, int width, int height, BufferedImage sprite) {
 		super();

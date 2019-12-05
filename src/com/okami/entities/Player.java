@@ -3,9 +3,7 @@ package com.okami.entities;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.okami.graficos.Spritesheet;
@@ -13,7 +11,11 @@ import com.okami.util.Action;
 import com.okami.util.KeyBoardAction;
 import com.okami.util.Observer;
 
-public class Player extends Entity{
+public class Player extends AnimatedEntity{
+	
+	private static Spritesheet spriteSheetIdle = new Spritesheet("/Idle.png");
+	private static Spritesheet spriteSheetRun = new Spritesheet("/Run.png");
+	
 	// Constantes que definem a direção do personagem
 	public int LEFT = 1, RIGHT = 2;
 	
@@ -22,21 +24,13 @@ public class Player extends Entity{
 	public int directionMovement = RIGHT;
 	//Indica que se o personagem está em movimento
 	public boolean isPlayerMoving;
-	// Controle para na contagem de frames para exibição da animação.
-	public int frame=0, maxFrame=4;
-	// Controle do index da animação.
-	public int indexRunning=0, maxIndexRunning=7;
-	public int indexIdle=0, maxIndexIdle=10;
-	List<BufferedImage> spritesIdle;
-	List<BufferedImage> spritesRun;
+	
 	Map<Integer, Observer> movementePlayerActions;
 	
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		speed = 1.4;
 		isPlayerMoving = false;
-		initSpriteIdle();
-		initSpriteRight();
 		initMovementActionPlayer();
 	}
 	
@@ -99,16 +93,6 @@ public class Player extends Entity{
 		}
 	}
 	
-	private void initSpriteIdle() {
-		spritesIdle = new ArrayList<BufferedImage>();
-		initSprite("/Idle.png", 858, spritesIdle);
-	}
-	
-	private void initSpriteRight() {
-		spritesRun = new ArrayList<BufferedImage>();
-		initSprite("/Run.png", 624, spritesRun);
-	}
-	
 	private void initMovementActionPlayer() {
 		movementePlayerActions = new HashMap<>();
 		Observer movePlayerRight = (Action command) -> {right = ((KeyBoardAction)command).isPressed();};
@@ -137,12 +121,48 @@ public class Player extends Entity{
 		this.movementePlayerActions = movementePlayerActions;
 	}
 
-	private void initSprite(String path, int size, List<BufferedImage> sprites){
-		Spritesheet spritesheet = new Spritesheet(path);
-		BufferedImage actualSprite;
-		for(int i = 0; i < size; i+=width) {
-			actualSprite = spritesheet.getSprite(i, 0, width, height);
-			sprites.add(actualSprite);
-		}
+	@Override
+	protected void initSprites() {
+		initSpriteIdle();
+		initSpriteRun();
+		
 	}
+
+	@Override
+	public String getSpritePathIdle() {
+		return "/Idle.png";
+	}
+
+	@Override
+	public String getSpritePathRun() {
+		return "/Run.png";
+	}
+
+	@Override
+	public int getSpriteWidthIdle() {
+		return 858;
+	}
+
+	@Override
+	public int getSpriteWidthRun() {
+		return 624;
+	}
+
+	@Override
+	public Spritesheet getSpritesheetIdle() {
+		return spriteSheetIdle;
+	}
+
+	@Override
+	public Spritesheet getSpritesheetRun() {
+		return spriteSheetRun;
+	}
+
+	@Override
+	protected void initIndex() {
+		super.maxIndexIdle = 10;
+		super.maxFrame = 4;
+		
+	}
+
 }

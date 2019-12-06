@@ -55,44 +55,50 @@ public class World extends GameObject {
 					
 					int pixelAtual = pixelsMap[xx + (yy*map.getWidth())];
 					
-					if(pixelAtual == FLOOR) {
-						chao.add(new FloorTile(xxPixel, yyPixel));
-					}else if(pixelAtual == WALL) {
-						parede.add(new WallTile(xxPixel, yyPixel));
-					}else if(pixelAtual == ENEMY){
-						chao.add(new FloorTile(xxPixel, yyPixel));
-						Game.entities.add(new PigEnemy(xxPixel, yyPixel));
-					}else if(pixelAtual == LIFE){
-						chao.add(new FloorTile(xxPixel, yyPixel));
-						Game.entities.add(new BigHeart(xxPixel, yyPixel));
-					}else if(pixelAtual == BULLET){
-						chao.add(new FloorTile(xxPixel, yyPixel));
-						Game.entities.add(new CannonBall(xxPixel, yyPixel));
-					}else if(pixelAtual == ROOF_TOP_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_UP_TILE));
-					}else if(pixelAtual == ROOF_BOTTOM_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_BOTTOM_TILE));
-					}else if(pixelAtual == ROOF_RIGHT_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_RIGHT_TILE));
-					}else if(pixelAtual == ROOF_LEFT_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_LEFT_TILE));
-					}else if(pixelAtual == CORNER_LEFT_BOTTOM_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_LEFT_BOTTOM_TILE));
-					}else if(pixelAtual == CORNER_LEFT_TOP_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_LEFT_UP_TILE));
-					}else if(pixelAtual == CORNER_RIGHT_BOTTOM_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_RIGHT_BOTTOM_TILE));
-					}else if(pixelAtual == CORNER_RIGHT_UP_TILE){
-						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_RIGHT_UP_TILE));
-					}else if(pixelAtual == PLAYER){
-						chao.add(new FloorTile(xxPixel, yyPixel));
-					}else {
-						teto.add(new RoofTile(xxPixel, yyPixel));
-					}
+					
+					Tile tile = TileFactory.createTile(pixelAtual);
+					tile.setX(xxPixel).setY(yyPixel);
+					chao.add(tile);
+					
+//					if(pixelAtual == FLOOR) {
+//						chao.add(new FloorTile(xxPixel, yyPixel));
+//					}else if(pixelAtual == WALL) {
+//						parede.add(new WallTile(xxPixel, yyPixel));
+//					}else if(pixelAtual == ENEMY){
+//						chao.add(new FloorTile(xxPixel, yyPixel));
+//						Game.entities.add(new PigEnemy(xxPixel, yyPixel));
+//					}else if(pixelAtual == LIFE){
+//						chao.add(new FloorTile(xxPixel, yyPixel));
+//						Game.entities.add(new BigHeart(xxPixel, yyPixel));
+//					}else if(pixelAtual == BULLET){
+//						chao.add(new FloorTile(xxPixel, yyPixel));
+//						Game.entities.add(new CannonBall(xxPixel, yyPixel));
+//					}else if(pixelAtual == ROOF_TOP_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_UP_TILE));
+//					}else if(pixelAtual == ROOF_BOTTOM_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_BOTTOM_TILE));
+//					}else if(pixelAtual == ROOF_RIGHT_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_RIGHT_TILE));
+//					}else if(pixelAtual == ROOF_LEFT_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.ROOF_LEFT_TILE));
+//					}else if(pixelAtual == CORNER_LEFT_BOTTOM_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_LEFT_BOTTOM_TILE));
+//					}else if(pixelAtual == CORNER_LEFT_TOP_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_LEFT_UP_TILE));
+//					}else if(pixelAtual == CORNER_RIGHT_BOTTOM_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_RIGHT_BOTTOM_TILE));
+//					}else if(pixelAtual == CORNER_RIGHT_UP_TILE){
+//						teto.add(new RoofTile(xxPixel, yyPixel, Tile.CORNER_RIGHT_UP_TILE));
+//					}else if(pixelAtual == PLAYER){
+//						chao.add(new FloorTile(xxPixel, yyPixel));
+//					}else {
+//						teto.add(new RoofTile(xxPixel, yyPixel));
+//					}
 					
 				}
 				
 			}
+			chao.sort((Tile t1, Tile t2) -> t1.layer - t2.layer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,8 +108,6 @@ public class World extends GameObject {
 	@Override
 	public void render(Graphics graphics) {
 		chao.forEach(tile->tile.render(graphics));
-		parede.forEach(tile->tile.render(graphics));
-		teto.forEach(tile->tile.render(graphics));
 	}
 
 	@Override

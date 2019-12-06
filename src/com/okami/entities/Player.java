@@ -31,6 +31,7 @@ public class Player extends AnimatedEntity{
 		super(x, y, width, height, sprite);
 		speed = 1.4;
 		isPlayerMoving = false;
+		layer = 1;
 		initMovementActionPlayer();
 	}
 	

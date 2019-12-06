@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 
 public abstract class Entity extends GameObject {
 	
-	protected double coordinateX;
-	protected double coordinateY;
 	protected int width;
 	protected int height;
 	protected BufferedImage sprite;
@@ -27,6 +25,7 @@ public abstract class Entity extends GameObject {
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
+		layer = 1;
 	}
 	
 	public int getY() {

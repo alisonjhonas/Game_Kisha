@@ -1,13 +1,21 @@
 package com.okami.entities;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.okami.actions.Action;
+import com.okami.actions.KeyBoardAction;
 import com.okami.graficos.Spritesheet;
+import com.okami.util.Observer;
 
-public class Player extends Entity{
+public class Player extends AnimatedEntity{
+	
+	private static Spritesheet spriteSheetIdle = new Spritesheet("/IdleShadow2.png");
+	private static Spritesheet spriteSheetRun = new Spritesheet("/RunShadow.png");
+	
 	// Constantes que definem a direção do personagem
 	public int LEFT = 1, RIGHT = 2;
 	
@@ -16,40 +24,35 @@ public class Player extends Entity{
 	public int directionMovement = RIGHT;
 	//Indica que se o personagem está em movimento
 	public boolean isPlayerMoving;
-	// Controle para na contagem de frames para exibição da animação.
-	public int frame=0, maxFrame=4;
-	// Controle do index da animação.
-	public int indexRunning=0, maxIndexRunning=7;
-	public int indexIdle=0, maxIndexIdle=10;
-	List<BufferedImage> spritesIdle;
-	List<BufferedImage> spritesRun;
+	
+	Map<Integer, Observer> movementePlayerActions;
 	
 	public Player(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, sprite);
 		speed = 1.4;
 		isPlayerMoving = false;
-		initSpriteIdle();
-		initSpriteRight();
+		layer = 1;
+		initMovementActionPlayer();
 	}
 	
 	@Override
 	public void tick(){
 		isPlayerMoving = false;
 		if(right) {
-			x+=speed;
+			coordinateX+=speed;
 			isPlayerMoving = true;
 			directionMovement = RIGHT;
 		}else if(left) {
-			x-=speed;
+			coordinateX-=speed;
 			isPlayerMoving = true;
 			directionMovement = LEFT;
 		}
 		
 		if(up) {
-			y-=speed;
+			coordinateY-=speed;
 			isPlayerMoving = true;
 		}else if(down) {
-			y+=speed;
+			coordinateY+=speed;
 			isPlayerMoving = true;
 		}
 		if(isPlayerMoving) {
@@ -78,35 +81,89 @@ public class Player extends Entity{
 	public void render(Graphics graphics) {
 		if(isPlayerMoving) {
 			if(directionMovement == RIGHT) {
-				graphics.drawImage(spritesRun.get(indexRunning), getX(), getY(), null);
+				graphics.drawImage(spritesRun.get(indexRunning), getX() - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, null);
 			}else if(directionMovement == LEFT) {
-				graphics.drawImage(spritesRun.get(indexRunning), getX() + width, getY(), -width, height, null);
+				graphics.drawImage(spritesRun.get(indexRunning), (getX() + width) - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, -width, height, null);
 			}
 		}else {
 			if(directionMovement == RIGHT) {
-				graphics.drawImage(spritesIdle.get(indexIdle), getX(), getY(), null);
+				graphics.drawImage(spritesIdle.get(indexIdle), getX() - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, null);
 			}else if(directionMovement == LEFT) {
-				graphics.drawImage(spritesIdle.get(indexIdle), getX() + width, getY(), -width, height, null);
+				graphics.drawImage(spritesIdle.get(indexIdle), (getX() + width) - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, -width, height, null);
 			}
 		}
 	}
 	
-	private void initSpriteIdle() {
-		spritesIdle = new ArrayList<BufferedImage>();
-		initSprite("/Idle.png", 858, spritesIdle);
+	private void initMovementActionPlayer() {
+		movementePlayerActions = new HashMap<>();
+		Observer movePlayerRight = (Action command) -> {right = ((KeyBoardAction)command).isPressed();};
+		Observer movePlayerLeft = (Action command) -> {left = ((KeyBoardAction)command).isPressed();};
+		Observer movePlayerUp = (Action command) -> {up = ((KeyBoardAction)command).isPressed();};
+		Observer movePlayerDown = (Action command) -> {down = ((KeyBoardAction)command).isPressed();};
+		
+		movementePlayerActions.put(KeyEvent.VK_RIGHT, movePlayerRight);
+		movementePlayerActions.put(KeyEvent.VK_D, movePlayerRight);
+		
+		movementePlayerActions.put(KeyEvent.VK_LEFT, movePlayerLeft);
+		movementePlayerActions.put(KeyEvent.VK_A, movePlayerLeft);
+		
+		movementePlayerActions.put(KeyEvent.VK_UP, movePlayerUp);
+		movementePlayerActions.put(KeyEvent.VK_W, movePlayerUp);
+		
+		movementePlayerActions.put(KeyEvent.VK_DOWN, movePlayerDown);
+		movementePlayerActions.put(KeyEvent.VK_S, movePlayerDown);
 	}
 	
-	private void initSpriteRight() {
-		spritesRun = new ArrayList<BufferedImage>();
-		initSprite("/Run.png", 624, spritesRun);
+	public Map<Integer, Observer> getMovementePlayerActions() {
+		return movementePlayerActions;
 	}
-	
-	private void initSprite(String path, int size, List<BufferedImage> sprites){
-		Spritesheet spritesheet = new Spritesheet(path);
-		BufferedImage actualSprite;
-		for(int i = 0; i < size; i+=width) {
-			actualSprite = spritesheet.getSprite(i, 0, width, height);
-			sprites.add(actualSprite);
-		}
+
+	public void setMovementePlayerActions(Map<Integer, Observer> movementePlayerActions) {
+		this.movementePlayerActions = movementePlayerActions;
 	}
+
+	@Override
+	protected void initSprites() {
+		initSpriteIdle();
+		initSpriteRun();
+		
+	}
+
+	@Override
+	public String getSpritePathIdle() {
+		return "/Idle.png";
+	}
+
+	@Override
+	public String getSpritePathRun() {
+		return "/Run.png";
+	}
+
+	@Override
+	public int getSpriteWidthIdle() {
+		return 858;
+	}
+
+	@Override
+	public int getSpriteWidthRun() {
+		return 624;
+	}
+
+	@Override
+	public Spritesheet getSpritesheetIdle() {
+		return spriteSheetIdle;
+	}
+
+	@Override
+	public Spritesheet getSpritesheetRun() {
+		return spriteSheetRun;
+	}
+
+	@Override
+	protected void initIndex() {
+		super.maxIndexIdle = 10;
+		super.maxFrame = 4;
+		
+	}
+
 }

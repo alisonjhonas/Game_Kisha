@@ -13,16 +13,16 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.okami.actions.Action;
+import com.okami.actions.KeyBoardAction;
 import com.okami.entities.GameObject;
-import com.okami.util.Command;
-import com.okami.util.KeyBoardCommand;
 import com.okami.util.Observer;
 
-public class GameScreen extends Canvas implements GameObject, KeyListener {
+public class GameScreen extends Canvas implements KeyListener {
 	private static final long serialVersionUID = 1L;
 	public  JFrame frame;
     public static final int WIDTH = 360;
-    public static final int HEIGHT = 480;
+    public static final int HEIGHT = 240;
     private final int SCALE = 2;
     private BufferedImage image;
     private GameObject game;
@@ -34,18 +34,20 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
     	initFrame();
     	image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
     	observers = new ArrayList<>();
-        registerObserver((Command command) -> game.execute(command));
+        registerObserver((Action command) -> ((Observer)game).apply(command));
     }
     
-	@Override
-	public void render(Graphics graphics) {
-		BufferStrategy bufferStrategy = this.getBufferStrategy();
+    public void render() {
+    	BufferStrategy bufferStrategy = this.getBufferStrategy();
     	if(bufferStrategy == null) {
     		this.createBufferStrategy(3);
     		return;
     	}
     	
-    	graphics = image.getGraphics();
+    	render(image.getGraphics(), bufferStrategy);
+    }
+    
+	public void render(Graphics graphics, BufferStrategy bufferStrategy) {		
     	clearScreen(graphics);
     	game.render(graphics);
     	drawGraphics(graphics, bufferStrategy);
@@ -53,7 +55,7 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
 	}
 	
 	public void clearScreen(Graphics graphics) {
-    	graphics.setColor(Color.GREEN);
+    	graphics.setColor(Color.BLACK);
     	graphics.fillRect(0, 0, WIDTH, HEIGHT);
 	}
 	
@@ -64,11 +66,6 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
     	bufferStrategy.show();
 	}
 	
-	@Override
-	public void tick() {
-		
-	}
-	
 	
 	public void setGame(GameObject game) {
 		this.game = game;
@@ -76,12 +73,12 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(true));
+		notifyObserver(KeyBoardAction.createCommand().keyCode(e.getKeyCode()).pressed(true));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		notifyObserver(KeyBoardCommand.createCommand().keyCode(e.getKeyCode()).pressed(false));
+		notifyObserver(KeyBoardAction.createCommand().keyCode(e.getKeyCode()).pressed(false));
 	}
 
 	@Override
@@ -90,7 +87,7 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
 		
 	}
 	
-	public void notifyObserver(KeyBoardCommand command) {
+	public void notifyObserver(KeyBoardAction command) {
 		for (Observer observer : observers) {
 			observer.apply(command);
 		}
@@ -106,14 +103,9 @@ public class GameScreen extends Canvas implements GameObject, KeyListener {
         frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);
+        setFocusable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
-
-	@Override
-	public void execute(Command command) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

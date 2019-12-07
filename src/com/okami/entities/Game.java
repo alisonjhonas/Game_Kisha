@@ -1,25 +1,34 @@
 package com.okami.entities;
 
 import java.awt.Graphics;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.okami.util.Command;
-import com.okami.util.KeyBoardCommand;
+import com.okami.actions.Action;
+import com.okami.actions.CameraMovementAction;
+import com.okami.actions.KeyBoardAction;
+import com.okami.actions.WorldMapAction;
+import com.okami.factories.AbstractEntityFactory;
+import com.okami.graficos.Camera;
+import com.okami.graficos.GameScreen;
 import com.okami.util.Observer;
 
-public class Game implements GameObject{
+public class Game extends GameObject implements Observer{
 	
 	
 	List<Entity> entities;
 	Player player;
-	Map<Integer, Observer> movementePlayerActions;
+	Camera camera;
+	World world;
+	private List<Observer> observers;
 	public Game() {
+		observers = new ArrayList<>();
 		entities = new ArrayList<Entity>();
-		movementePlayerActions = new HashMap<Integer, Observer>();
+		camera = new Camera();
+		world = new World();
+		world.registerObserver(this);
+		world.buiild("/map-2.png");
+		registerObserver(world);
 	}
 
 	public List<Entity> getEntities() {
@@ -37,47 +46,71 @@ public class Game implements GameObject{
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
+	
 	@Override
 	public void render(Graphics graphics) {
+		world.render(graphics);
 		entities.forEach(entity -> entity.render(graphics));
 	}
 	
 	@Override
 	public void tick() {		
-		entities.forEach(entity -> entity.tick());		
+		entities.forEach(entity -> entity.tick());
+		if(player != null) 
+			moveCamera();
 	}
 	
-	public void initMovementActionPlayer() {
-		Observer movePlayerRight = (Command command) -> {player.right = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerLeft = (Command command) -> {player.left = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerUp = (Command command) -> {player.up = ((KeyBoardCommand)command).isPressed();};
-		Observer movePlayerDown = (Command command) -> {player.down = ((KeyBoardCommand)command).isPressed();};
+	public void moveCamera() {
+		double newCoordinateX = Math.min(Math.max(player.coordinateX - GameScreen.WIDTH/2, 0), world.getWidth()- GameScreen.WIDTH);
+		double newCoordinateY = Math.max(Math.min(player.coordinateY - GameScreen.HEIGHT/2, world.getHeight() - GameScreen.HEIGHT), 0);
+		camera.setCoordinateX(newCoordinateX);
+		camera.setCoordinateY(newCoordinateY);
+		notifyObserver(CameraMovementAction.builder().xCoordinate((int)newCoordinateX).yCoordinate((int)newCoordinateY));
 		
-		movementePlayerActions.put(KeyEvent.VK_RIGHT, movePlayerRight);
-		movementePlayerActions.put(KeyEvent.VK_D, movePlayerRight);
-		
-		movementePlayerActions.put(KeyEvent.VK_LEFT, movePlayerLeft);
-		movementePlayerActions.put(KeyEvent.VK_A, movePlayerLeft);
-		
-		movementePlayerActions.put(KeyEvent.VK_UP, movePlayerUp);
-		movementePlayerActions.put(KeyEvent.VK_W, movePlayerUp);
-		
-		movementePlayerActions.put(KeyEvent.VK_DOWN, movePlayerDown);
-		movementePlayerActions.put(KeyEvent.VK_S, movePlayerDown);
 	}
 	
-	public void movePlayer(KeyBoardCommand command) {
-		if(movementePlayerActions.containsKey(command.getKeyCode())) {
-			movementePlayerActions.get(command.getKeyCode()).apply(command);
+	public void movePlayer(KeyBoardAction action) {
+		if(player.getMovementePlayerActions().containsKey(action.getKeyCode())) {
+			player.getMovementePlayerActions().get(action.getKeyCode()).apply(action);
 		}
+	}
+	
+	public void addEntity(WorldMapAction action) {
+		try {
+			Entity entity = AbstractEntityFactory.create(action.getColor()).create();
+			entity.setY(action.getyCoordinate());
+			entity.setX(action.getxCoordinate());
+			entities.add(entity);
+			observers.add(entity);
+			if(entity instanceof Player)
+				player = (Player) entity;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void execute() {
+		
 	}
 
 	@Override
-	public void execute(Command command) {
-		if(command instanceof KeyBoardCommand) {
-			movePlayer((KeyBoardCommand)command);
+	public void apply(Action action) {
+		if(action instanceof KeyBoardAction) {
+			movePlayer((KeyBoardAction)action);
+		}else if(action instanceof WorldMapAction) {
+			addEntity((WorldMapAction)action);
 		}
-		
+	}
+	
+	public void notifyObserver(CameraMovementAction action) {
+		for (Observer observer : observers) {
+			observer.apply(action);
+		}
+	}
+	
+	public void registerObserver(Observer observer) {
+		this.observers.add(observer);
 	}
 	
 }

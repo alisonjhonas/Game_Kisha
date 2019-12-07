@@ -35,6 +35,9 @@ public abstract class Entity extends GameObject {
 	public void setY(int y) {
 		this.coordinateY = y;
 	}
+	public void setX(int x) {
+		this.coordinateX = x;
+	}
 	
 	public int getX() {
 		return (int) coordinateX;
@@ -50,9 +53,13 @@ public abstract class Entity extends GameObject {
 	
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(sprite, this.getX() - (int)Game.camera.getCoordinateX(), this.getY() - (int)Game.camera.getCoordinateY(), null);
+		graphics.drawImage(sprite, this.getX() - (int)offsetCoordinateX, this.getY() - (int)offsetCoordinateY, null);
 	}
-
+	
+	public void render(Graphics graphics, BufferedImage actaulSprite, int x, int y) {
+		graphics.drawImage(actaulSprite, x - (int)offsetCoordinateX, y - (int)offsetCoordinateY, null);
+	}
+	
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub

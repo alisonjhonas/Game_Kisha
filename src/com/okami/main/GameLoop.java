@@ -1,9 +1,9 @@
 package com.okami.main;
 
 import com.okami.entities.GameObject;
+import com.okami.factories.GameScreenFactory;
+import com.okami.factories.GameFactory;
 import com.okami.graficos.GameScreen;
-import com.okami.util.GameScreenStrategy;
-import com.okami.util.GameStrategy;
 
 public class GameLoop implements Runnable {
 	
@@ -17,8 +17,8 @@ public class GameLoop implements Runnable {
     private GameObject game;
     private GameScreen gameScreen;
     public GameLoop(){
-        game = GameStrategy.createGame();
-        gameScreen = GameScreenStrategy.createGameScreen(game);
+        game = GameFactory.create();
+        gameScreen = GameScreenFactory.create(game);
     }
     
     public synchronized void start(){

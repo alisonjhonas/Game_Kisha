@@ -13,9 +13,9 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.okami.actions.Action;
+import com.okami.actions.KeyBoardAction;
 import com.okami.entities.GameObject;
-import com.okami.util.Action;
-import com.okami.util.KeyBoardAction;
 import com.okami.util.Observer;
 
 public class GameScreen extends Canvas implements KeyListener {

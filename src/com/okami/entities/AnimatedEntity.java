@@ -56,7 +56,7 @@ public abstract class AnimatedEntity extends Entity {
 	
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(spritesIdle.get(indexIdle), getX() - (int)Game.camera.getCoordinateX(), getY() - (int)Game.camera.getCoordinateY(), null);
+		graphics.drawImage(spritesIdle.get(indexIdle), getX() - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, null);
 	}
 	
 	public abstract Spritesheet getSpritesheetIdle();

@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.okami.actions.Action;
+import com.okami.actions.KeyBoardAction;
 import com.okami.graficos.Spritesheet;
-import com.okami.util.Action;
-import com.okami.util.KeyBoardAction;
 import com.okami.util.Observer;
 
 public class Player extends AnimatedEntity{
@@ -81,15 +81,15 @@ public class Player extends AnimatedEntity{
 	public void render(Graphics graphics) {
 		if(isPlayerMoving) {
 			if(directionMovement == RIGHT) {
-				graphics.drawImage(spritesRun.get(indexRunning), getX() - (int)Game.camera.getCoordinateX(), getY() - (int)Game.camera.getCoordinateY(), null);
+				graphics.drawImage(spritesRun.get(indexRunning), getX() - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, null);
 			}else if(directionMovement == LEFT) {
-				graphics.drawImage(spritesRun.get(indexRunning), (getX() + width) - (int)Game.camera.getCoordinateX(), getY() - (int)Game.camera.getCoordinateY(), -width, height, null);
+				graphics.drawImage(spritesRun.get(indexRunning), (getX() + width) - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, -width, height, null);
 			}
 		}else {
 			if(directionMovement == RIGHT) {
-				graphics.drawImage(spritesIdle.get(indexIdle), getX() - (int)Game.camera.getCoordinateX(), getY() - (int)Game.camera.getCoordinateY(), null);
+				graphics.drawImage(spritesIdle.get(indexIdle), getX() - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, null);
 			}else if(directionMovement == LEFT) {
-				graphics.drawImage(spritesIdle.get(indexIdle), (getX() + width) - (int)Game.camera.getCoordinateX(), getY() - (int)Game.camera.getCoordinateY(), -width, height, null);
+				graphics.drawImage(spritesIdle.get(indexIdle), (getX() + width) - (int)offsetCoordinateX, getY() - (int)offsetCoordinateY, -width, height, null);
 			}
 		}
 	}

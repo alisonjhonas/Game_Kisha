@@ -4,26 +4,31 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.okami.actions.Action;
+import com.okami.actions.CameraMovementAction;
+import com.okami.actions.KeyBoardAction;
+import com.okami.actions.WorldMapAction;
+import com.okami.factories.AbstractEntityFactory;
 import com.okami.graficos.Camera;
 import com.okami.graficos.GameScreen;
-import com.okami.util.Action;
-import com.okami.util.KeyBoardAction;
 import com.okami.util.Observer;
-import com.okami.util.PlayerStrategy;
 
 public class Game extends GameObject implements Observer{
 	
 	
-	static List<Entity> entities;
-	static Player player;
-	static Camera camera;
+	List<Entity> entities;
+	Player player;
+	Camera camera;
 	World world;
+	private List<Observer> observers;
 	public Game() {
+		observers = new ArrayList<>();
 		entities = new ArrayList<Entity>();
-		player = PlayerStrategy.createPlayer();
-		entities.add(player);
 		camera = new Camera();
-		world = new World("/map-2.png");
+		world = new World();
+		world.registerObserver(this);
+		world.buiild("/map-2.png");
+		registerObserver(world);
 	}
 
 	public List<Entity> getEntities() {
@@ -51,7 +56,8 @@ public class Game extends GameObject implements Observer{
 	@Override
 	public void tick() {		
 		entities.forEach(entity -> entity.tick());
-		moveCamera();
+		if(player != null) 
+			moveCamera();
 	}
 	
 	public void moveCamera() {
@@ -59,14 +65,30 @@ public class Game extends GameObject implements Observer{
 		double newCoordinateY = Math.max(Math.min(player.coordinateY - GameScreen.HEIGHT/2, world.getHeight() - GameScreen.HEIGHT), 0);
 		camera.setCoordinateX(newCoordinateX);
 		camera.setCoordinateY(newCoordinateY);
+		notifyObserver(CameraMovementAction.builder().xCoordinate((int)newCoordinateX).yCoordinate((int)newCoordinateY));
+		
 	}
 	
-	public void movePlayer(KeyBoardAction command) {
-		if(player.getMovementePlayerActions().containsKey(command.getKeyCode())) {
-			player.getMovementePlayerActions().get(command.getKeyCode()).apply(command);
+	public void movePlayer(KeyBoardAction action) {
+		if(player.getMovementePlayerActions().containsKey(action.getKeyCode())) {
+			player.getMovementePlayerActions().get(action.getKeyCode()).apply(action);
 		}
 	}
-
+	
+	public void addEntity(WorldMapAction action) {
+		try {
+			Entity entity = AbstractEntityFactory.create(action.getColor()).create();
+			entity.setY(action.getyCoordinate());
+			entity.setX(action.getxCoordinate());
+			entities.add(entity);
+			observers.add(entity);
+			if(entity instanceof Player)
+				player = (Player) entity;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void execute() {
 		
@@ -76,7 +98,19 @@ public class Game extends GameObject implements Observer{
 	public void apply(Action action) {
 		if(action instanceof KeyBoardAction) {
 			movePlayer((KeyBoardAction)action);
+		}else if(action instanceof WorldMapAction) {
+			addEntity((WorldMapAction)action);
 		}
+	}
+	
+	public void notifyObserver(CameraMovementAction action) {
+		for (Observer observer : observers) {
+			observer.apply(action);
+		}
+	}
+	
+	public void registerObserver(Observer observer) {
+		this.observers.add(observer);
 	}
 	
 }

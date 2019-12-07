@@ -1,17 +1,20 @@
-package com.okami.entities;
+package com.okami.tiles;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.okami.entities.GameObject;
 import com.okami.graficos.Spritesheet;
 
 public class Tile extends GameObject {
 	public static final Integer FLOOR_TILE_COLOR = 0xFF000000;
 	
-	public static final Integer ROOF_LEFT_TILE_COLOR = 0xFF777777;
-	public static final Integer ROOF_SHADOW_LEFT_TILE_COLOR = 0xFF666666;
+	public static final Integer ROOF_LEFT_TILE_COLOR = 0xFF666666;
+	public static final Integer ROOF_SHADOW_LEFT_TILE_COLOR = 0xFF777777;
 	public static final Integer ROOF_RIGHT_TILE_COLOR = 0xFF555555;
 	public static final Integer ROOF_TOP_TILE_COLOR = 0xFFFFFFFF;
 	public static final Integer ROOF_BOTTOM_TILE_COLOR = 0xFF999999;
@@ -25,10 +28,10 @@ public class Tile extends GameObject {
 	public static final Integer ENEMY_COLOR = 0xFF00FF00;
 	public static final Integer BULLET_COLOR = 0xFFFFFF00;
 	public static final Integer LIFE_COLOR = 0xFFFF0000;
-	public static final Integer WALL_COLOR = 0xFFFFCBDB;
+	public static final Integer WALL_TILE_COLOR = 0xFFFFCBDB;
 	
 	
-	protected static int TILE_DIMENSION = 32;
+	public static int TILE_DIMENSION = 32;
 	private static Spritesheet spritesheet = new Spritesheet("/TerrainShadow2.png");
 	protected static BufferedImage FLOOR_SPRITE = spritesheet.getSprite(160, 352, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage WALL_SPRITE = spritesheet.getSprite(160, 160, TILE_DIMENSION, TILE_DIMENSION+5);
@@ -71,7 +74,7 @@ public class Tile extends GameObject {
 		mapSpritesTile.put(CORNER_LEFT_BOTTOM_TILE_COLOR, CORNER_LEFT_BOTTOM_SPRITE);
 		mapSpritesTile.put(CORNER_RIGHT_TOP_TILE_COLOR, CORNER_RIGHT_TOP_SPRITE);
 		mapSpritesTile.put(CORNER_RIGHT_BOTTOM_TILE_COLOR, CORNER_RIGHT_BOTTOM_SPRITE);
-		mapSpritesTile.put(WALL_COLOR, WALL_SPRITE);
+		mapSpritesTile.put(WALL_TILE_COLOR, WALL_SPRITE);
 		mapSpritesTile.put(PLAYER_COLOR, FLOOR_SPRITE);
 		mapSpritesTile.put(ENEMY_COLOR, FLOOR_SPRITE);
 		mapSpritesTile.put(BULLET_COLOR, FLOOR_SPRITE);
@@ -100,9 +103,64 @@ public class Tile extends GameObject {
 
 	@Override
 	public void render(Graphics graphics) {
-		graphics.drawImage(sprite, (int)this.getCoordinateX() - (int) Game.camera.getCoordinateX(), (int)this.getCoordinateY() - (int)Game.camera.getCoordinateY(), null);		
+		graphics.drawImage(sprite, (int)this.getCoordinateX() - (int)offsetCoordinateX, (int)this.getCoordinateY() - (int)offsetCoordinateY, null);		
 	}
+	
+	private List<Integer> getListFloorTileColor(){
+		List<Integer> floorTileColors = new ArrayList<>();
+		floorTileColors.add(FLOOR_TILE_COLOR);
+		return floorTileColors; 
+	}
+	
+	private List<Integer> getListWallTileColor(){
+		List<Integer> wallTileColors = new ArrayList<>();
+		wallTileColors.add(WALL_TILE_COLOR);
+		return wallTileColors;
+	}
+	
+	private List<Integer> getListRoofTileColor(){
+		List<Integer> roofTileColors = new ArrayList<>();
+		roofTileColors.add(ROOF_BOTTOM_TILE_COLOR);
+		roofTileColors.add(ROOF_TOP_TILE_COLOR);
+		roofTileColors.add(ROOF_LEFT_TILE_COLOR);
+		roofTileColors.add(ROOF_RIGHT_TILE_COLOR);
+		roofTileColors.add(ROOF_SHADOW_LEFT_TILE_COLOR);
 
+		roofTileColors.add(CORNER_LEFT_BOTTOM_TILE_COLOR);
+		roofTileColors.add(CORNER_LEFT_TOP_TILE_COLOR);
+		roofTileColors.add(CORNER_RIGHT_BOTTOM_TILE_COLOR);
+		roofTileColors.add(CORNER_RIGHT_TOP_TILE_COLOR);
+		
+		
+		return roofTileColors;
+	}
+	
+	private List<Integer> getListEntityTileColor(){
+		List<Integer> entityTileColors = new ArrayList<>();
+		entityTileColors.add(PLAYER_COLOR);
+		entityTileColors.add(ENEMY_COLOR);
+		entityTileColors.add(LIFE_COLOR);
+		entityTileColors.add(BULLET_COLOR);
+		return entityTileColors; 
+	}
+	
+	public boolean isFloorTileColor(Integer tileColor) {
+		return getListFloorTileColor().contains(tileColor);
+	}
+	
+	public boolean isWallTileColor(Integer tileColor) {
+		return getListWallTileColor().contains(tileColor);
+	}
+	
+	public boolean isRoofTileColor(Integer tileColor) {
+		return getListRoofTileColor().contains(tileColor);
+	}
+	
+	public boolean isEntityColor(Integer tileColor) {
+		return getListEntityTileColor().contains(tileColor);
+	}
+	
+	
 	@Override
 	public void tick() {
 		// TODO Auto-generated method stub		

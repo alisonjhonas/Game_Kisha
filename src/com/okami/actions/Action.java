@@ -1,4 +1,4 @@
-package com.okami.util;
+package com.okami.actions;
 
 public abstract class Action {
 	

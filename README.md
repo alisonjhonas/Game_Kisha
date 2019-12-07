@@ -2,10 +2,9 @@
 ## Game Sketch Inspired by Zelda Classic Game.
 
 ### Settings
-* Java 11
+* Java 8
 * Assets [itch](https://itch.io/game-assets)
   * [Kings and Pigs](https://pixel-frog.itch.io/kings-and-pigs)
-  * [Pixel_Poem Dungeon Asset](https://pixel-poem.itch.io/dungeon-assetpuck)
 
 ### Mechanics
 * Start Menu, Pause and Game Over

@@ -33,5 +33,13 @@ public abstract class GameObject implements Command, Observer{
 			updateOffset((CameraMovementAction)action);
 		}
 	}
+
+	public int getLayer() {
+		return layer;
+	}
+
+	public void setLayer(int layer) {
+		this.layer = layer;
+	}
 	
 }

@@ -33,25 +33,37 @@ public class Player extends AnimatedEntity{
 		isPlayerMoving = false;
 		layer = 1;
 		initMovementActionPlayer();
+		initBodyColide();
 	}
 	
 	@Override
 	public void tick(){
+		updateBodyColide();
 		isPlayerMoving = false;
 		if(right) {
-			coordinateX+=speed;
-			isPlayerMoving = true;
-			directionMovement = RIGHT;
+			if(isMovementeAllowed(body.getX()+body.getWidth()+speed, body.getY())) {
+				coordinateX+=speed;
+				isPlayerMoving = true;
+			}
+			if(directionMovement != RIGHT) {
+				directionMovement = RIGHT;
+				coordinateX += 20;
+			}
 		}else if(left) {
-			coordinateX-=speed;
-			isPlayerMoving = true;
-			directionMovement = LEFT;
+			if(isMovementeAllowed(body.getX()-speed, body.getY())) {
+				coordinateX-=speed;
+				isPlayerMoving = true;
+			}
+			if(directionMovement != LEFT) {
+				directionMovement = LEFT;
+				coordinateX -= 20;
+			}
 		}
 		
-		if(up) {
+		if (up && isMovementeAllowed(body.getX(), body.getY()-speed)) {
 			coordinateY-=speed;
 			isPlayerMoving = true;
-		}else if(down) {
+		} else if (down && isMovementeAllowed(body.getX(), body.getY()+body.getHeight()+speed)) {
 			coordinateY+=speed;
 			isPlayerMoving = true;
 		}
@@ -75,6 +87,13 @@ public class Player extends AnimatedEntity{
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isMovementeAllowed(double x, double y) {
+		return collisionStrategy.isTileFree(layer, x, y);
 	}
 	
 	@Override
@@ -164,6 +183,18 @@ public class Player extends AnimatedEntity{
 		super.maxIndexIdle = 10;
 		super.maxFrame = 4;
 		
+	}
+
+	private void initBodyColide(){
+		body = new BodyColide(37,13);
+	}
+
+	private void updateBodyColide(){
+		if(directionMovement == RIGHT) {
+			body.update(coordinateX+9-offsetCoordinateX, coordinateY+31-offsetCoordinateY);
+		}else if(directionMovement == LEFT){
+			body.update(coordinateX+32-offsetCoordinateX, coordinateY+31-offsetCoordinateY);
+		}
 	}
 
 }

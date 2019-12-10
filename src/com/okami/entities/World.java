@@ -4,7 +4,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -17,6 +19,7 @@ import com.okami.util.Observer;
 public class World extends GameObject {
 	
 	List<Tile> tiles;
+	Map<String, Tile> tilesCoordinateMap;
 	int width, height;
 	BufferedImage map;
 	int[] pixelsMap;
@@ -46,8 +49,9 @@ public class World extends GameObject {
 
 	private void createInstanceOfTiles(BufferedImage map, int[] pixelsMap) {
 		tiles = new ArrayList<Tile>();
-		for(int xx = 0; xx < map.getWidth(); xx++) {
-			for(int yy = 0; yy < map.getHeight(); yy++) {
+		tilesCoordinateMap = new HashMap<>();
+		for(int yy = 0; yy < map.getHeight(); yy++) {
+			for(int xx = 0; xx < map.getWidth(); xx++) {
 				
 				int xxPixel = xx*Tile.TILE_DIMENSION;
 				int yyPixel = yy*Tile.TILE_DIMENSION;
@@ -55,6 +59,7 @@ public class World extends GameObject {
 				int pixelAtual = pixelsMap[xx + (yy*map.getWidth())];
 				Tile tile = TileFactory.create(pixelAtual, xxPixel, yyPixel);
 				tiles.add(tile);
+				tilesCoordinateMap.put(xx+""+yy, tile);
 				if(tile.isEntityColor(pixelAtual)) {
 					notifyObserver(WorldMapAction.builder().color(pixelAtual).xCoordinate(xxPixel).yCoordinate(yyPixel));
 				}
@@ -98,5 +103,9 @@ public class World extends GameObject {
 	@Override
 	protected void updateOffset(CameraMovementAction action) {
 		tiles.forEach((tile)->tile.updateOffset(action));
+	}
+	
+	public Tile getTile(int xCoordinate, int yCoordinate) {
+		return tilesCoordinateMap.get(xCoordinate+""+yCoordinate);
 	}
 }

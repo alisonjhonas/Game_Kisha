@@ -11,6 +11,8 @@ import com.okami.actions.WorldMapAction;
 import com.okami.factories.AbstractEntityFactory;
 import com.okami.graficos.Camera;
 import com.okami.graficos.GameScreen;
+import com.okami.util.CollisionStrategy;
+import com.okami.util.LayerCollisionStrategy;
 import com.okami.util.Observer;
 
 public class Game extends GameObject implements Observer{
@@ -20,15 +22,21 @@ public class Game extends GameObject implements Observer{
 	Player player;
 	Camera camera;
 	World world;
+	TesteBody testeBody;
+	CollisionStrategy collisionStrategy;
 	private List<Observer> observers;
 	public Game() {
+		testeBody = new TesteBody(0, 0, 37, 13);
 		observers = new ArrayList<>();
 		entities = new ArrayList<Entity>();
+		entities.add(testeBody);
 		camera = new Camera();
 		world = new World();
+		collisionStrategy = new LayerCollisionStrategy(world);
 		world.registerObserver(this);
 		world.buiild("/map-2.png");
 		registerObserver(world);
+		registerObserver(testeBody);
 	}
 
 	public List<Entity> getEntities() {
@@ -54,7 +62,15 @@ public class Game extends GameObject implements Observer{
 	}
 	
 	@Override
-	public void tick() {		
+	public void tick() {
+		if(player.directionMovement == player.RIGHT) {
+			testeBody.setX(player.getX() + 9 - (int)player.offsetCoordinateX);
+			testeBody.setY(player.getY() + 31- (int)player.offsetCoordinateY);
+		}
+		else if(player.directionMovement == player.LEFT) {
+			testeBody.setX(player.getX() + 32 - (int)player.offsetCoordinateX);
+			testeBody.setY(player.getY() + 31 - (int)player.offsetCoordinateY);
+		}
 		entities.forEach(entity -> entity.tick());
 		if(player != null) 
 			moveCamera();
@@ -80,6 +96,7 @@ public class Game extends GameObject implements Observer{
 			Entity entity = AbstractEntityFactory.create(action.getColor()).create();
 			entity.setY(action.getyCoordinate());
 			entity.setX(action.getxCoordinate());
+			entity.setCollisionStrategy(collisionStrategy);
 			entities.add(entity);
 			observers.add(entity);
 			if(entity instanceof Player)

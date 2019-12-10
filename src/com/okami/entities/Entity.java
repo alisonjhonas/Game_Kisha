@@ -3,12 +3,16 @@ package com.okami.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.okami.util.CollisionStrategy;
+
 public abstract class Entity extends GameObject {
 	
 	protected int width;
 	protected int height;
 	protected BufferedImage sprite;
 	protected double speed = 0.0;
+	protected CollisionStrategy collisionStrategy;
+	protected BodyColide body;
 	
 	public Entity(int x, int y, int width, int height) {
 		super();
@@ -64,6 +68,14 @@ public abstract class Entity extends GameObject {
 	public void tick() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public CollisionStrategy getCollisionStrategy() {
+		return collisionStrategy;
+	}
+
+	public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+		this.collisionStrategy = collisionStrategy;
 	}
 
 }

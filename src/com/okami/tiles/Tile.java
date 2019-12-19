@@ -19,6 +19,15 @@ public class Tile extends GameObject {
 	public static final Integer ROOF_TOP_TILE_COLOR = 0xFFFFFFFF;
 	public static final Integer ROOF_BOTTOM_TILE_COLOR = 0xFF999999;
 	
+	public static final Integer ROOF_TOP_CORNERS_TILE_COLOR = 0xFF62D032;
+	public static final Integer ROOF_BOTTOM_CORNERS_TILE_COLOR = 0xFF6232D0;
+	public static final Integer ROOF_SIDERS_VERTICAL_TILE_COLOR = 0xFF3262D0;
+	public static final Integer ROOF_SIDERS_HORIZONTAL_TILE_COLOR = 0xFF326232;
+	
+	public static final Integer ROOF_LEFT_CORNERS_TILE_COLOR = 0xFF626232;
+	public static final Integer ROOF_RIGHT_CORNERS_TILE_COLOR = 0xFF623262;
+	
+	
 	public static final Integer CORNER_LEFT_TOP_TILE_COLOR = 0xFFDDDDDD;
 	public static final Integer CORNER_LEFT_BOTTOM_TILE_COLOR = 0xFF111111;
 	public static final Integer CORNER_RIGHT_TOP_TILE_COLOR = 0xFFBBBBBB;
@@ -35,12 +44,24 @@ public class Tile extends GameObject {
 	private static Spritesheet spritesheet = new Spritesheet("/TerrainShadow2.png");
 	protected static BufferedImage FLOOR_SPRITE = spritesheet.getSprite(160, 352, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage WALL_SPRITE = spritesheet.getSprite(160, 160, TILE_DIMENSION, TILE_DIMENSION+5);
+	
 	protected static BufferedImage ROOF_SPRITE = spritesheet.getSprite(64, 66, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage ROOF_LEFT_SPRITE = spritesheet.getSprite(248, 320, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage ROOF_SHADOW_LEFT_SPRITE = spritesheet.getSprite(248, 320, TILE_DIMENSION+3, TILE_DIMENSION);
 	protected static BufferedImage ROOF_RIGHT_SPRITE = spritesheet.getSprite(216, 320, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage ROOF_TOP_SPRITE = spritesheet.getSprite(248, 352, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage ROOF_BOTTOM_SPRITE = spritesheet.getSprite(216, 352, TILE_DIMENSION, TILE_DIMENSION);
+	
+	protected static BufferedImage RROOF_TOP_CORNERS_SPRITE = spritesheet.getSprite(384, 320, TILE_DIMENSION, TILE_DIMENSION);
+	protected static BufferedImage ROOF_BOTTOM_CORNERS_SPRITE = spritesheet.getSprite(384, 352, TILE_DIMENSION, TILE_DIMENSION);
+	
+	protected static BufferedImage ROOF_SIDERS_HORIZONTAL_SPRITE = spritesheet.getSprite(352, 352, TILE_DIMENSION, TILE_DIMENSION);
+
+	protected static BufferedImage ROOF_RIGHT_CORNERS_SPRITE = spritesheet.rotate(spritesheet.getSprite(384, 320, TILE_DIMENSION, TILE_DIMENSION), 90d);
+	protected static BufferedImage ROOF_LEFT_CORNERS_SPRITE = spritesheet.rotate(spritesheet.getSprite(384, 352, TILE_DIMENSION, TILE_DIMENSION),90d);
+	
+	protected static BufferedImage ROOF_SIDERS_SPRITE = spritesheet.getSprite(352, 320, TILE_DIMENSION, TILE_DIMENSION);
+	
 	protected static BufferedImage CORNER_LEFT_TOP_SPRITE = spritesheet.getSprite(288, 320, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage CORNER_LEFT_BOTTOM_SPRITE = spritesheet.getSprite(320, 320, TILE_DIMENSION, TILE_DIMENSION);
 	protected static BufferedImage CORNER_RIGHT_TOP_SPRITE = spritesheet.getSprite(320, 352, TILE_DIMENSION, TILE_DIMENSION);
@@ -79,8 +100,13 @@ public class Tile extends GameObject {
 		mapSpritesTile.put(ENEMY_COLOR, FLOOR_SPRITE);
 		mapSpritesTile.put(BULLET_COLOR, FLOOR_SPRITE);
 		mapSpritesTile.put(LIFE_COLOR, FLOOR_SPRITE);
-		mapSpritesTile.put(ROOF_SHADOW_LEFT_TILE_COLOR, ROOF_SHADOW_LEFT_SPRITE);
-		
+		mapSpritesTile.put(ROOF_SHADOW_LEFT_TILE_COLOR, ROOF_SHADOW_LEFT_SPRITE);		
+		mapSpritesTile.put(ROOF_TOP_CORNERS_TILE_COLOR, RROOF_TOP_CORNERS_SPRITE);
+		mapSpritesTile.put(ROOF_BOTTOM_CORNERS_TILE_COLOR, ROOF_BOTTOM_CORNERS_SPRITE);
+		mapSpritesTile.put(ROOF_SIDERS_VERTICAL_TILE_COLOR, ROOF_SIDERS_SPRITE);		
+		mapSpritesTile.put(ROOF_SIDERS_HORIZONTAL_TILE_COLOR, ROOF_SIDERS_HORIZONTAL_SPRITE);
+		mapSpritesTile.put(ROOF_RIGHT_CORNERS_TILE_COLOR, ROOF_RIGHT_CORNERS_SPRITE);
+		mapSpritesTile.put(ROOF_LEFT_CORNERS_TILE_COLOR, ROOF_LEFT_CORNERS_SPRITE);		
 	}
 	
 	public double getCoordinateX() {
@@ -131,6 +157,12 @@ public class Tile extends GameObject {
 		roofTileColors.add(CORNER_RIGHT_BOTTOM_TILE_COLOR);
 		roofTileColors.add(CORNER_RIGHT_TOP_TILE_COLOR);
 		
+		roofTileColors.add(ROOF_TOP_CORNERS_TILE_COLOR);
+		roofTileColors.add(ROOF_BOTTOM_CORNERS_TILE_COLOR);
+		roofTileColors.add(ROOF_SIDERS_VERTICAL_TILE_COLOR);
+		roofTileColors.add(ROOF_SIDERS_HORIZONTAL_TILE_COLOR);
+		roofTileColors.add(ROOF_RIGHT_CORNERS_TILE_COLOR);
+		roofTileColors.add(ROOF_LEFT_CORNERS_TILE_COLOR);
 		
 		return roofTileColors;
 	}

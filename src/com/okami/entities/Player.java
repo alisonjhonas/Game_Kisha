@@ -41,7 +41,7 @@ public class Player extends AnimatedEntity{
 		updateBodyColide();
 		isPlayerMoving = false;
 		if(right) {
-			if(isMovementeAllowed(body.getX()+body.getWidth()+speed, body.getY())) {
+			if(isMovementeAllowed(body.getX()+body.getWidth()+speed, body.getY()) && isMovementeAllowed(body.getX()+body.getWidth()+speed, body.getY()+bode)) {
 				coordinateX+=speed;
 				isPlayerMoving = true;
 			}
@@ -191,9 +191,9 @@ public class Player extends AnimatedEntity{
 
 	private void updateBodyColide(){
 		if(directionMovement == RIGHT) {
-			body.update(coordinateX+9-offsetCoordinateX, coordinateY+31-offsetCoordinateY);
+			body.update(coordinateX+9, coordinateY+31);
 		}else if(directionMovement == LEFT){
-			body.update(coordinateX+32-offsetCoordinateX, coordinateY+31-offsetCoordinateY);
+			body.update(coordinateX+32, coordinateY+31);
 		}
 	}
 

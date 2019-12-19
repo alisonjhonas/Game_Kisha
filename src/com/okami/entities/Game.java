@@ -29,14 +29,14 @@ public class Game extends GameObject implements Observer{
 		testeBody = new TesteBody(0, 0, 37, 13);
 		observers = new ArrayList<>();
 		entities = new ArrayList<Entity>();
-		entities.add(testeBody);
 		camera = new Camera();
 		world = new World();
-		collisionStrategy = new LayerCollisionStrategy(world);
+		collisionStrategy = new LayerCollisionStrategy(this);
 		world.registerObserver(this);
 		world.buiild("/map-2.png");
 		registerObserver(world);
 		registerObserver(testeBody);
+		setPlayerToEnemyEntity();
 	}
 
 	public List<Entity> getEntities() {
@@ -99,8 +99,9 @@ public class Game extends GameObject implements Observer{
 			entity.setCollisionStrategy(collisionStrategy);
 			entities.add(entity);
 			observers.add(entity);
-			if(entity instanceof Player)
+			if(entity instanceof Player) {
 				player = (Player) entity;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -111,6 +112,14 @@ public class Game extends GameObject implements Observer{
 		
 	}
 
+	private void setPlayerToEnemyEntity(){
+		for (Entity entity : entities) {
+			if(entity instanceof Enemy) {
+				((Enemy)entity).setPlayer(player);
+			}
+		}
+	}
+	
 	@Override
 	public void apply(Action action) {
 		if(action instanceof KeyBoardAction) {
@@ -129,5 +138,8 @@ public class Game extends GameObject implements Observer{
 	public void registerObserver(Observer observer) {
 		this.observers.add(observer);
 	}
-	
+
+	public World getWorld() {
+		return world;
+	}
 }

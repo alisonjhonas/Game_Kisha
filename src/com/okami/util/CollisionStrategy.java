@@ -1,14 +1,14 @@
 package com.okami.util;
 
-import com.okami.entities.World;
+import com.okami.entities.Game;
 
 public abstract class CollisionStrategy {
 	
-	World world;
+	Game game;
 	
-	public CollisionStrategy(World world) {
+	public CollisionStrategy(Game game) {
 		super();
-		this.world = world;
+		this.game = game;
 	}
 
 	public abstract boolean isTileFree(int layer, double x, double y);

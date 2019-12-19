@@ -10,6 +10,7 @@ public class BigHeart extends AnimatedEntity {
 	
 	public BigHeart(int x, int y) {
 		super(x, y, 18, 14);
+		layer = 1;
 	}
 
 	public BigHeart(int x, int y, int width, int height, BufferedImage sprite) {

@@ -20,6 +20,7 @@ public abstract class Entity extends GameObject {
 		this.coordinateY = y;
 		this.width = width;
 		this.height = height;
+		initBodyColide();
 	}
 	
 	public Entity(int x, int y, int width, int height, BufferedImage sprite) {
@@ -29,6 +30,7 @@ public abstract class Entity extends GameObject {
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
+		initBodyColide();
 		layer = 1;
 	}
 	
@@ -45,6 +47,14 @@ public abstract class Entity extends GameObject {
 	
 	public int getX() {
 		return (int) coordinateX;
+	}
+	
+	public double getCoordinateX() {
+		return coordinateX;
+	}
+	
+	public double getCoordinateY() {
+		return coordinateY;
 	}
 	
 	public int getWidth() {
@@ -78,4 +88,16 @@ public abstract class Entity extends GameObject {
 		this.collisionStrategy = collisionStrategy;
 	}
 
+	public BodyColide getBody() {
+		return body;
+	}
+	
+	
+	private void initBodyColide(){
+		body = new BodyColide(height,width);
+	}
+
+	private void updateBodyColide(){
+		
+	}
 }

@@ -10,6 +10,7 @@ public class CannonBall extends Entity {
 
 	public CannonBall(int x, int y) {
 		super(x, y, 44, 28, spriteSheetIdle.getSprite(0, 0, 44, 28));
+		layer = 1;
 	}
 
 	public CannonBall(int x, int y, int width, int height, BufferedImage sprite) {
